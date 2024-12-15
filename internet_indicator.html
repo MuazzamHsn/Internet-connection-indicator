@@ -1,228 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Internet Connection Indicator</title>
     <link rel="shortcut icon" href="Images/internet.ico" type="image/x-icon" />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Internet Connection Indicator</title>
-      <link
-        rel="shortcut icon"
-        href="Images/internet.ico"
-        type="image/x-icon"
-      />
-      <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        rel="stylesheet"
-      />
-      <style>
-        /* Wrapper and Animation */
-        .wrapper {
-          position: absolute;
-          top: 20px;
-          left: 30%;
-          animation: show_toast 0.5s ease forwards;
-          visibility: visible;
-        }
-
-        @keyframes show_toast {
-          0% {
-            transform: translateX(-100%);
-          }
-          40% {
-            transform: translateX(10%);
-          }
-          80%,
-          100% {
-            transform: translateX(20px);
-          }
-        }
-
-        .wrapper.hide {
-          animation: hide_toast 0.5s ease forwards;
-        }
-
-        @keyframes hide_toast {
-          0% {
-            opacity: 1;
-            transform: translateX(20px);
-          }
-          100% {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateX(-100%);
-            visibility: hidden;
-          }
-        }
-
-        /* Toast Notification */
-        .toast {
-          margin: 0 auto;
-          background: #fff;
-          padding: 15px 15px 10px 20px;
-          border-radius: 10px;
-          border-left: 5px solid #2ecc71;
-          box-shadow: 1px 7px 14px -5px rgba(0, 0, 0, 0.15);
-          width: 430px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          font-family: "Poppins", sans-serif;
-          transition: all 0.3s ease-in-out;
-        }
-
-        .toast.offline {
-          border-color: #ccc;
-        }
-
-        /* Content */
-        .toast .content {
-          display: flex;
-          align-items: center;
-        }
-
-        .content .icon {
-          font-size: 24px;
-          color: #fff;
-          height: 50px;
-          width: 50px;
-          text-align: center;
-          line-height: 50px;
-          border-radius: 50%;
-          background: #2ecc71;
-        }
-
-        .toast.offline .content .icon {
-          background: orangered;
-        }
-
-        .content .details {
-          margin-left: 20px;
-        }
-
-        .details span {
-          font-size: 20px;
-          font-weight: 500;
-          color: #333;
-        }
-
-        .details p {
-          margin-top: 2px;
-          margin-bottom: 5px;
-          color: #878787;
-        }
-
-        /* Close Button */
-        .toast .close-icon {
-          color: #878787;
-          font-size: 23px;
-          cursor: pointer;
-          height: 40px;
-          width: 40px;
-          text-align: center;
-          line-height: 40px;
-          border-radius: 50%;
-          background: #f2f2f2;
-          transition: all 0.3s ease;
-        }
-
-        .close-icon:hover {
-          background: #dddddd;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="wrapper">
-        <div class="toast">
-          <div class="content">
-            <div class="icon"><i class="fa-solid fa-wifi"></i></div>
-            <div class="details">
-              <span>You're online now</span>
-              <p>Hurray! Internet is connected</p>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="toast" id="toast">
+            <div class="content">
+                <div class="icon"><i class="fa-solid fa-wifi"></i></div>
+                <div class="details">
+                    <span id="status">You're online now</span>
+                    <p id="message">Hurray! Internet is connected</p>
+                </div>
             </div>
-          </div>
-          <div class="close-icon"><i class="fa-solid fa-xmark"></i></div>
+            <div class="close-icon"><i class="fa-solid fa-xmark"></i></div>
         </div>
-      </div>
-    </body>
-
-    <script>
-      const wrapper = document.querySelector(".wrapper");
-      const toast = wrapper.querySelector(".toast");
-      const title = toast.querySelector("span");
-      const subtitle = toast.querySelector("p");
-      const wifiIcon = toast.querySelector(".icon");
-      const closeIcon = toast.querySelector(".close-icon");
-
-      window.onload = () => {
-        // Function to check internet connection
-        function ajax() {
-          const xhr = new XMLHttpRequest();
-          xhr.open("GET", "https://jsonplaceholder.typicode.com/posts", true);
-
-          xhr.onload = () => {
-            if (xhr.status === 200 && xhr.status < 300) {
-              online();
-            } else {
-              offline();
-            }
-          };
-
-          xhr.onerror = () => {
-            offline();
-          };
-
-          xhr.send();
-        }
-
-        // Online state handler
-        function online() {
-          toast.classList.remove("offline");
-          title.innerText = "You're online now";
-          subtitle.innerText = "Hurray! Internet is connected";
-          wifiIcon.innerHTML = '<i class="fa-solid fa-wifi"></i>';
-          wifiIcon.style.background = "#2ecc71";
-
-          // Automatically close after 5 seconds
-          setTimeout(() => {
-            close();
-          }, 5000);
-        }
-
-        // Offline state handler
-        function offline() {
-          toast.classList.add("offline");
-          title.innerText = "You're offline";
-          subtitle.innerText = "Oops! Internet is disconnected";
-          wifiIcon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-          wifiIcon.style.background = "orangered";
-        }
-
-        // Close the toast notification
-        function close() {
-          wrapper.classList.add("hide");
-        }
-
-        // Periodically check connection status
-        setInterval(() => {
-          ajax();
-        }, 3000);
-
-        // Close button event listener
-        closeIcon.addEventListener("click", () => {
-          close();
-        });
-      };
-    </script>
-  </html>
+    </div>
+    <script src="script.js"></script>
+</body>
 </html>
